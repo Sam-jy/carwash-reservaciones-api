@@ -1,0 +1,55 @@
+<?php
+
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+include_once 'database.php';
+include_once 'Reservaciones.php';
+include_once 'Auth.php';
+
+// Verificar autenticación
+$auth = new Auth();
+$tokenData = $auth->validateToken();
+
+if (!$tokenData) {
+    http_response_code(401);
+    echo json_encode(
+        array(
+            "message" => "Acceso no autorizado. Se requiere un token válido."
+        )
+    );
+    exit();
+}
+
+$db = new DataBase();
+$instant = $db->getConnection();
+
+$reserva = new Reservaciones($instant);
+$data = json_decode(file_get_contents("php://input"));
+
+if (isset($data) && !empty($data->id)) {
+    $reserva->id = $data->id;
+
+    if ($reserva->deleteReservacion()) {
+        http_response_code(200);
+        echo json_encode([
+            "issuccess" => true,
+            "message" => "Reservación eliminada correctamente"
+        ]);
+    } else {
+        http_response_code(503);
+        echo json_encode([
+            "issuccess" => false,
+            "message" => "No se pudo eliminar la reservación"
+        ]);
+    }
+} else {
+    http_response_code(400);
+    echo json_encode([
+        "issuccess" => false,
+        "message" => "ID de reservación no proporcionado"
+    ]);
+}
+?> 

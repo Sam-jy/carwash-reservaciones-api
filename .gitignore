@@ -1,0 +1,24 @@
+# Archivos de configuración IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+
+# Archivos de caché y configuración PHP
+/vendor/
+/logs/
+.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos específicos de Windows
+~*
+$* 
