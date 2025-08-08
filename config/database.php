@@ -1,9 +1,6 @@
 <?php
 
-/**
- * Configuración de la base de datos
- * Centraliza todos los parámetros de conexión
- */
+// Configuración de la base de datos
 
 return [
     'host' => 'localhost:3307',

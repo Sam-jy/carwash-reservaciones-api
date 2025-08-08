@@ -1,29 +1,21 @@
 <?php
 
-/**
- * Rutas de la API - Car Wash El Catracho
- * Maneja todos los endpoints de la aplicación
- */
+// Rutas de la API - Car Wash El Catracho
 
-// Incluir controladores
 require_once __DIR__ . '/../app/Http/Controllers/ClientController.php';
 require_once __DIR__ . '/../app/Http/Controllers/AdminController.php';
 
-// Configurar headers globales
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// Manejar peticiones OPTIONS para CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-/**
- * Router simple para manejar las rutas
- */
+// Router simple para manejar las rutas
 class ApiRouter
 {
     private $routes = [];
@@ -35,13 +27,11 @@ class ApiRouter
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         
-        // Remover el prefijo del proyecto si existe
         $basePath = '/carwash-reservaciones-api';
         if (strpos($this->uri, $basePath) === 0) {
             $this->uri = substr($this->uri, strlen($basePath));
         }
         
-        // Remover /routes/api.php del URI
         $this->uri = str_replace('/routes/api.php', '', $this->uri);
         
         if (empty($this->uri)) {
@@ -49,41 +39,26 @@ class ApiRouter
         }
     }
 
-    /**
-     * Registrar una ruta GET
-     */
     public function get($pattern, $callback)
     {
         $this->addRoute('GET', $pattern, $callback);
     }
 
-    /**
-     * Registrar una ruta POST
-     */
     public function post($pattern, $callback)
     {
         $this->addRoute('POST', $pattern, $callback);
     }
 
-    /**
-     * Registrar una ruta PUT
-     */
     public function put($pattern, $callback)
     {
         $this->addRoute('PUT', $pattern, $callback);
     }
 
-    /**
-     * Registrar una ruta DELETE
-     */
     public function delete($pattern, $callback)
     {
         $this->addRoute('DELETE', $pattern, $callback);
     }
 
-    /**
-     * Agregar ruta al array de rutas
-     */
     private function addRoute($method, $pattern, $callback)
     {
         $this->routes[] = [
@@ -93,9 +68,6 @@ class ApiRouter
         ];
     }
 
-    /**
-     * Ejecutar el router
-     */
     public function run()
     {
         foreach ($this->routes as $route) {

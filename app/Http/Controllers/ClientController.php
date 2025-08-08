@@ -8,10 +8,7 @@ require_once __DIR__ . '/../../Models/Notificacion.php';
 require_once __DIR__ . '/../../Models/Historial.php';
 require_once __DIR__ . '/../Middleware/Auth.php';
 
-/**
- * Controlador para clientes
- * Maneja todas las operaciones relacionadas con los clientes
- */
+// Controlador para clientes
 class ClientController
 {
     private $db;
@@ -76,13 +73,8 @@ class ClientController
         return json_decode(file_get_contents("php://input"), true);
     }
 
-    // =============================================
     // MÉTODOS DE AUTENTICACIÓN
-    // =============================================
 
-    /**
-     * Registro de nuevo cliente
-     */
     public function register()
     {
         try {

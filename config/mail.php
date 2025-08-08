@@ -1,15 +1,13 @@
 <?php
 
-/**
- * Configuración para el envío de correos electrónicos
- */
+// Configuración para el envío de correos electrónicos
 
 return [
     'smtp' => [
-        'host' => 'smtp.gmail.com', // Cambia según tu proveedor
+        'host' => 'smtp.gmail.com',
         'port' => 587,
-        'username' => '', // Tu email
-        'password' => '', // Tu contraseña de aplicación
+        'username' => '',
+        'password' => '',
         'encryption' => 'tls',
         'auth' => true
     ],

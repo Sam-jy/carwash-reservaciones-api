@@ -1,9 +1,6 @@
 <?php
 
-/**
- * Clase base para todos los modelos
- * Proporciona funcionalidad común para operaciones CRUD
- */
+// Clase base para todos los modelos
 abstract class BaseModel
 {
     protected $conexion;
@@ -23,9 +20,6 @@ abstract class BaseModel
         }
     }
 
-    /**
-     * Buscar un registro por ID
-     */
     public function find($id)
     {
         $query = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id LIMIT 1";

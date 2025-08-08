@@ -1,33 +1,24 @@
 <?php
 
-/**
- * Punto de entrada principal para la API Car Wash El Catracho
- * Maneja el ruteo y configuración inicial
- */
+// Punto de entrada principal para la API Car Wash El Catracho
 
-// Configuración de errores
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // No mostrar errores en producción
+ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// Configurar timezone
 date_default_timezone_set('America/Tegucigalpa');
 
-// Headers CORS globales
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 header("Content-Type: application/json; charset=UTF-8");
 
-// Manejar preflight OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-/**
- * Autoloader simple para clases
- */
+// Autoloader
 function autoloadClasses($className) {
     $paths = [
         __DIR__ . '/app/Models/',
@@ -48,9 +39,7 @@ function autoloadClasses($className) {
 
 spl_autoload_register('autoloadClasses');
 
-/**
- * Manejo de errores globales
- */
+// Manejo de errores globales
 function handleError($errno, $errstr, $errfile, $errline) {
     $error = [
         'error' => $errno,
@@ -62,7 +51,6 @@ function handleError($errno, $errstr, $errfile, $errline) {
     
     error_log(json_encode($error));
     
-    // No mostrar errores internos en producción
     if (!in_array($errno, [E_NOTICE, E_WARNING])) {
         http_response_code(500);
         echo json_encode([
@@ -76,9 +64,7 @@ function handleError($errno, $errstr, $errfile, $errline) {
 
 set_error_handler('handleError');
 
-/**
- * Manejo de excepciones no capturadas
- */
+// Manejo de excepciones
 function handleException($exception) {
     error_log("Uncaught exception: " . $exception->getMessage());
     
@@ -95,9 +81,7 @@ function handleException($exception) {
 
 set_exception_handler('handleException');
 
-/**
- * Router principal
- */
+// Router principal
 class MainRouter {
     private $basePath;
     private $requestUri;
