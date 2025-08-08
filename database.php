@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Clase de configuración y conexión a la base de datos
- * Maneja la conexión PDO con configuración centralizada
- */
 class Database 
 {
     private $host;
@@ -15,10 +10,8 @@ class Database
     public $conexion;
 
     public function __construct() {
-        // Cargar configuración desde archivo de configuración
         $configPath = __DIR__ . '/config/database.php';
         if (!file_exists($configPath)) {
-            // Fallback a configuración por defecto
             $config = [
                 'host' => 'localhost:3307',
                 'database' => 'carwash_db',
@@ -37,10 +30,7 @@ class Database
         $this->charset = $config['charset'];
     }
 
-    /**
-     * Establece y retorna la conexión a la base de datos
-     * @return PDO|null
-     */
+
     public function getConnection()
     {
         $this->conexion = null;
@@ -63,10 +53,7 @@ class Database
         return $this->conexion;
     }
 
-    /**
-     * Método estático para obtener una instancia de conexión rápidamente
-     * @return PDO
-     */
+
     public static function connect() {
         $db = new self();
         return $db->getConnection();

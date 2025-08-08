@@ -213,22 +213,18 @@
     </div>
 
     <script>
-        // Configuración de la API
         const API_BASE = '/carwash-reservaciones-api/routes/api.php';
 
-        // Auto-focus en el primer campo
         document.getElementById('email').focus();
 
-        // Formatear código automáticamente
         document.getElementById('codigo').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Solo números
+            let value = e.target.value.replace(/\D/g, '');
             if (value.length > 6) {
                 value = value.substring(0, 6);
             }
             e.target.value = value;
         });
 
-        // Verificar código
         async function verificarCodigo() {
             const email = document.getElementById('email').value.trim();
             const codigo = document.getElementById('codigo').value.trim();
@@ -262,7 +258,6 @@
                 if (data.success) {
                     mostrarMensaje('¡Email verificado exitosamente! Ya puedes iniciar sesión en la aplicación.', 'success');
                     
-                    // Ocultar formulario después de un delay
                     setTimeout(() => {
                         document.querySelector('.verification-form').style.display = 'none';
                     }, 3000);
@@ -275,7 +270,6 @@
             }
         }
 
-        // Reenviar código
         async function reenviarCodigo() {
             const email = document.getElementById('email').value.trim();
 

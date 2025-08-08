@@ -1,7 +1,5 @@
 <?php
 
-// Rutas de la API - Car Wash El Catracho
-
 require_once __DIR__ . '/../app/Http/Controllers/ClientController.php';
 require_once __DIR__ . '/../app/Http/Controllers/AdminController.php';
 
@@ -15,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Router simple para manejar las rutas
+
 class ApiRouter
 {
     private $routes = [];
@@ -79,16 +77,11 @@ class ApiRouter
             }
         }
 
-        // Si no se encuentra la ruta
         $this->notFound();
     }
 
-    /**
-     * Verificar si la URI coincide con el patrón
-     */
     private function matchRoute($pattern)
     {
-        // Convertir patrón a regex
         $pattern = preg_replace('/\{([^}]+)\}/', '([^/]+)', $pattern);
         $pattern = '#^' . $pattern . '$#';
         
@@ -104,23 +97,19 @@ class ApiRouter
         $pattern = '#^' . $pattern . '$#';
         
         preg_match($pattern, $this->uri, $matches);
-        array_shift($matches); // Remover la coincidencia completa
+        array_shift($matches);
         
         return $matches;
     }
 
-    /**
-     * Ejecutar callback con parámetros
-     */
+    private function executeCallback($callback, $pattern)
     private function executeCallback($callback, $pattern)
     {
         $params = $this->getParams($pattern);
         call_user_func_array($callback, $params);
     }
 
-    /**
-     * Respuesta 404
-     */
+
     private function notFound()
     {
         http_response_code(404);
@@ -137,14 +126,9 @@ class ApiRouter
     }
 }
 
-// Crear instancia del router
 $router = new ApiRouter();
 
-// =============================================
-// RUTAS PÚBLICAS (SIN AUTENTICACIÓN)
-// =============================================
-
-// Ruta de prueba
+$router->get('/', function() {
 $router->get('/', function() {
     echo json_encode([
         'success' => true,
@@ -157,39 +141,31 @@ $router->get('/', function() {
     ]);
 });
 
-// =============================================
-// RUTAS DE AUTENTICACIÓN PARA CLIENTES
-// =============================================
-
-// Registro de cliente
+$router->post('/api/cliente/register', function() {
 $router->post('/api/cliente/register', function() {
     $controller = new ClientController();
     $controller->register();
 });
 
-// Login de cliente
+$router->post('/api/cliente/login', function() {
 $router->post('/api/cliente/login', function() {
     $controller = new ClientController();
     $controller->login();
 });
 
-// Verificar email
+$router->post('/api/cliente/verificar-email', function() {
 $router->post('/api/cliente/verificar-email', function() {
     $controller = new ClientController();
     $controller->verificarEmail();
 });
 
-// Reenviar código de verificación
+$router->post('/api/cliente/reenviar-codigo', function() {
 $router->post('/api/cliente/reenviar-codigo', function() {
     $controller = new ClientController();
     $controller->reenviarCodigo();
 });
 
-// =============================================
-// RUTAS DE CLIENTE (REQUIEREN AUTENTICACIÓN)
-// =============================================
-
-// Perfil del usuario
+$router->get('/api/cliente/perfil', function() {
 $router->get('/api/cliente/perfil', function() {
     $controller = new ClientController();
     $controller->getPerfil();
@@ -295,17 +271,13 @@ $router->post('/api/cliente/historial/{historialId}/calificar', function($histor
     $controller->calificarServicio($historialId);
 });
 
-// =============================================
-// RUTAS DE ADMINISTRACIÓN
-// =============================================
-
-// Login de administrador
+$router->post('/api/admin/login', function() {
 $router->post('/api/admin/login', function() {
     $controller = new AdminController();
     $controller->loginAdmin();
 });
 
-// Dashboard y estadísticas
+$router->get('/api/admin/dashboard', function() {
 $router->get('/api/admin/dashboard', function() {
     $controller = new AdminController();
     $controller->getDashboard();
@@ -316,7 +288,7 @@ $router->get('/api/admin/reportes', function() {
     $controller->getReportes();
 });
 
-// Gestión de usuarios
+$router->get('/api/admin/usuarios', function() {
 $router->get('/api/admin/usuarios', function() {
     $controller = new AdminController();
     $controller->getUsuarios();
@@ -337,7 +309,7 @@ $router->post('/api/admin/crear-admin', function() {
     $controller->createAdmin();
 });
 
-// Gestión de cotizaciones
+$router->get('/api/admin/cotizaciones', function() {
 $router->get('/api/admin/cotizaciones', function() {
     $controller = new AdminController();
     $controller->getCotizaciones();
@@ -363,7 +335,7 @@ $router->post('/api/admin/cotizaciones/{id}/cancelar', function($id) {
     $controller->cancelarCotizacion($id);
 });
 
-// Gestión de servicios
+$router->get('/api/admin/servicios', function() {
 $router->get('/api/admin/servicios', function() {
     $controller = new AdminController();
     $controller->getServicios();
@@ -384,7 +356,7 @@ $router->delete('/api/admin/servicios/{id}', function($id) {
     $controller->deleteServicio($id);
 });
 
-// Historial y reportes
+$router->get('/api/admin/historial', function() {
 $router->get('/api/admin/historial', function() {
     $controller = new AdminController();
     $controller->getHistorialGeneral();
