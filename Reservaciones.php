@@ -19,14 +19,12 @@ class Reservaciones
     public $notas;
     public $fecha_creacion;
 
-    // Constructor de la clase reservaciones
     public function __construct($db)
     {
         $this->conexion = $db;
     }
 
 
-    // Create
     public function createReservacion()
     {
         $consulta = "INSERT INTO 
@@ -46,7 +44,7 @@ class Reservaciones
 
         $comando = $this->conexion->prepare($consulta);
 
-        // Sanitizacion
+        $this->nombre_cliente = htmlspecialchars(strip_tags($this->nombre_cliente));
         $this->nombre_cliente = htmlspecialchars(strip_tags($this->nombre_cliente));
         $this->telefono = htmlspecialchars(strip_tags($this->telefono));
         $this->email = htmlspecialchars(strip_tags($this->email));
@@ -59,7 +57,7 @@ class Reservaciones
         $this->estado = htmlspecialchars(strip_tags($this->estado));
         $this->notas = htmlspecialchars(strip_tags($this->notas));
 
-        // bind data
+        $comando->bindParam(":nombre_cliente", $this->nombre_cliente);
         $comando->bindParam(":nombre_cliente", $this->nombre_cliente);
         $comando->bindParam(":telefono", $this->telefono);
         $comando->bindParam(":email", $this->email);
@@ -79,8 +77,6 @@ class Reservaciones
         return false;
     }
 
-    // Read
-     
     public function GetListReservaciones()
     {
         $consulta = "SELECT * FROM " . $this->table . "";
@@ -90,8 +86,6 @@ class Reservaciones
         return $comando;
     }
 
-    // Update
-    
     public function updateReservacion()
     {
         $consulta = "UPDATE " . $this->table . " SET 

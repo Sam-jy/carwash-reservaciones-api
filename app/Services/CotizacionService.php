@@ -42,41 +42,32 @@ class CotizacionService
     public function crearCotizacion($data, $usuarioId)
     {
         try {
-            // Validar que el vehículo pertenece al usuario
             $vehiculo = $this->vehiculoModel->find($data['vehiculo_id']);
             if (!$vehiculo || $vehiculo['usuario_id'] != $usuarioId) {
                 throw new Exception('El vehículo seleccionado no es válido');
             }
 
-            // Validar que el servicio existe y está activo
             $servicio = $this->servicioModel->find($data['servicio_id']);
             if (!$servicio || !$servicio['activo']) {
                 throw new Exception('El servicio seleccionado no está disponible');
             }
 
-            // Validar disponibilidad del servicio para la ubicación
             if (!$this->servicioModel->isDisponible($data['servicio_id'], $data['tipo_ubicacion'])) {
                 throw new Exception('El servicio no está disponible para la ubicación seleccionada');
             }
 
-            // Verificar disponibilidad de fecha/hora
             if (!$this->cotizacionModel->verificarDisponibilidad($data['fecha_servicio'], $data['hora_servicio'])) {
                 throw new Exception('La fecha y hora seleccionadas no están disponibles');
             }
 
-            // Validar horarios especiales para cambio de aceite
             if (strtolower($servicio['nombre']) === 'cambio de aceite' && $data['tipo_ubicacion'] === 'domicilio') {
                 throw new Exception('El cambio de aceite solo está disponible en centro de servicio');
             }
 
-            // Agregar usuario_id a los datos
             $data['usuario_id'] = $usuarioId;
-
-            // Crear la cotización
             $cotizacion = $this->cotizacionModel->createCotizacion($data);
 
             if ($cotizacion) {
-                // Enviar notificación de confirmación
                 $this->notificarCotizacionCreada($cotizacion['id'], $usuarioId);
                 
                 return $cotizacion;

@@ -140,7 +140,6 @@ class NotificacionService
         $whereConditions = ["tipo_usuario = 'cliente'", "activo = 1"];
         $params = [];
 
-        // Filtrar por usuarios sin servicios en X días
         if (isset($criterios['dias_sin_servicio'])) {
             $fechaLimite = date('Y-m-d', strtotime("-{$criterios['dias_sin_servicio']} days"));
             $whereConditions[] = "id NOT IN (
@@ -150,7 +149,6 @@ class NotificacionService
             $params[':fecha_limite'] = $fechaLimite;
         }
 
-        // Filtrar por usuarios frecuentes
         if (isset($criterios['solo_frecuentes']) && $criterios['solo_frecuentes']) {
             $whereConditions[] = "id IN (
                 SELECT usuario_id FROM historial_servicios 
@@ -159,7 +157,6 @@ class NotificacionService
             )";
         }
 
-        // Filtrar por usuarios nuevos
         if (isset($criterios['solo_nuevos']) && $criterios['solo_nuevos']) {
             $fechaLimite = date('Y-m-d', strtotime('-30 days'));
             $whereConditions[] = "fecha_creacion >= :fecha_nuevos";

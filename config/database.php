@@ -1,7 +1,5 @@
 <?php
 
-// Configuración de la base de datos
-
 return [
     'host' => 'localhost:3307',
     'database' => 'carwash_db',

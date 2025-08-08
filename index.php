@@ -1,7 +1,5 @@
 <?php
 
-// Punto de entrada principal para la API Car Wash El Catracho
-
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -18,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Autoloader
+function autoloadClasses($className) {
 function autoloadClasses($className) {
     $paths = [
         __DIR__ . '/app/Models/',
@@ -39,7 +37,7 @@ function autoloadClasses($className) {
 
 spl_autoload_register('autoloadClasses');
 
-// Manejo de errores globales
+function handleError($errno, $errstr, $errfile, $errline) {
 function handleError($errno, $errstr, $errfile, $errline) {
     $error = [
         'error' => $errno,
@@ -64,7 +62,7 @@ function handleError($errno, $errstr, $errfile, $errline) {
 
 set_error_handler('handleError');
 
-// Manejo de excepciones
+function handleException($exception) {
 function handleException($exception) {
     error_log("Uncaught exception: " . $exception->getMessage());
     
@@ -81,7 +79,7 @@ function handleException($exception) {
 
 set_exception_handler('handleException');
 
-// Router principal
+class MainRouter {
 class MainRouter {
     private $basePath;
     private $requestUri;
@@ -105,34 +103,28 @@ class MainRouter {
     }
     
     public function route() {
-        // Remover base path del URI
         $path = substr($this->requestUri, strlen($this->basePath));
         
-        // Rutas especiales
         if ($path === '' || $path === '/') {
             $this->showWelcome();
             return;
         }
         
-        // Ruta de verificación de email
         if ($path === '/verificar' || $path === '/verificacion') {
             $this->showVerification();
             return;
         }
         
-        // Ruta de documentación de API
         if ($path === '/docs' || $path === '/api-docs') {
             $this->showApiDocs();
             return;
         }
         
-        // Rutas de API
         if (strpos($path, '/api/') === 0) {
             $this->handleApiRoute($path);
             return;
         }
         
-        // Compatibilidad con archivos existentes
         $legacyFiles = [
             '/PostReservacion.php',
             '/GetReservaciones.php', 
@@ -146,7 +138,6 @@ class MainRouter {
             return;
         }
         
-        // 404 - Ruta no encontrada
         $this->notFound();
     }
     
@@ -174,7 +165,6 @@ class MainRouter {
     }
     
     private function showVerification() {
-        // Mostrar página de verificación de email
         readfile(__DIR__ . '/resources/views/verificacion.blade.php');
     }
     
@@ -236,10 +226,8 @@ class MainRouter {
     }
     
     private function handleApiRoute($path) {
-        // Guardar la ruta original para que el router de API la use
         $_SERVER['REQUEST_URI'] = $this->basePath . $path;
         require_once __DIR__ . '/routes/api.php';
-        // El router se ejecuta automáticamente al incluir el archivo
     }
     
     private function handleLegacyRoute($path) {
@@ -278,7 +266,7 @@ class MainRouter {
     }
 }
 
-// Ejecutar router principal
+
 try {
     $router = new MainRouter();
     $router->route();

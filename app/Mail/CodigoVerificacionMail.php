@@ -94,7 +94,6 @@ class CodigoVerificacionMail
      */
     private function enviarEmail($destinatario, $asunto, $mensaje)
     {
-        // Headers para email HTML
         $headers = [
             'MIME-Version: 1.0',
             'Content-type: text/html; charset=UTF-8',
@@ -102,9 +101,6 @@ class CodigoVerificacionMail
             'Reply-To: ' . $this->config['from']['email'],
             'X-Mailer: PHP/' . phpversion()
         ];
-
-        // Intentar enviar con mail() por ahora
-        // En producción se debería usar una librería como PHPMailer o SwiftMailer
         $enviado = mail($destinatario, $asunto, $mensaje, implode("\r\n", $headers));
 
         if ($enviado) {

@@ -1,7 +1,5 @@
 <?php
 
-// Configuración para el envío de correos electrónicos
-
 return [
     'smtp' => [
         'host' => 'smtp.gmail.com',
